@@ -28,4 +28,4 @@ aws_secret_access_key=your_secret_access_key
 
 - `yarn deploy`
 
-The app should deploy to `http://<custom.siteName>.s3-website-us-east-1.amazonaws.com/
+The app should deploy to `http://<custom.siteName>.s3-website-us-east-1.amazonaws.com/`
