@@ -27,5 +27,9 @@ aws_secret_access_key=your_secret_access_key
 ## To deploy
 
 - `yarn deploy`
+- Note the endpoint of your graphql function in the deploy output.
+- Create a `.env.production` file at the root of the project that matches the structure of `.env.production.sample`
+- Update it to use the url of your graphql endpoint.
+- `yarn deploy` again (The url is stable between deploys, so from now on you can just do this once.)
 
 The app should deploy to `http://<custom.siteName>.s3-website-us-east-1.amazonaws.com/`
