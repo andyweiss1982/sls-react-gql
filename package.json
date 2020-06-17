@@ -1,0 +1,29 @@
+{
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "parcel": "^1.12.4",
+    "serverless-offline": "^6.4.0",
+    "serverless-s3-sync": "^1.14.3"
+  },
+  "scripts": {
+    "start": "concurrently \"parcel frontend/index.html -d build\" \"AWS_PROFILE=personal sls offline\"",
+    "deploy": "rm -rf build && parcel build frontend/index.html -d build && sls deploy"
+  },
+  "dependencies": {
+    "@apollo/react-hooks": "^3.1.5",
+    "@types/react": "^16.8.0",
+    "apollo-boost": "^0.4.9",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link-context": "^1.0.20",
+    "apollo-link-http": "^1.5.17",
+    "apollo-server-lambda": "^2.14.5",
+    "aws-sdk": "^2.698.0",
+    "bcrypt": "^5.0.0",
+    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "uuid": "^8.1.0"
+  }
+}
