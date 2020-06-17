@@ -5,8 +5,8 @@
 ## Pre Setup
 
 - `npm i -g serverless`
-- set up a `personal` profile in `~/.aws/credentials`
 - `sls login`
+- set up a `personal` profile in `~/.aws/credentials`
 
 ```
 [personal]
@@ -20,10 +20,6 @@ aws_secret_access_key=your_secret_access_key
 - Configure the `app`, `org` `custom.siteName` and `custom.tableName` properties of the `serverless.yml` file.
 - `sls`
 
-## To run locally
-
-- `yarn start`
-
 ## To deploy
 
 - `yarn deploy`
@@ -33,3 +29,7 @@ aws_secret_access_key=your_secret_access_key
 - `yarn deploy` again (The url is stable between deploys, so from now on you can just do this once.)
 
 The app should deploy to `http://<custom.siteName>.s3-website-us-east-1.amazonaws.com/`
+
+## To run locally
+
+- `yarn start`
