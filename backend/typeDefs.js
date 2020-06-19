@@ -1,6 +1,6 @@
 const { gql } = require("apollo-server-lambda");
 
-export const typeDefs = gql`
+const typeDefs = gql`
   type Task {
     id: ID!
     description: String!
@@ -24,3 +24,5 @@ export const typeDefs = gql`
     deleteTask(id: ID!): Task!
   }
 `;
+
+module.exports.typeDefs = typeDefs;
