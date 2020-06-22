@@ -2,20 +2,19 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "./Authentication";
 
 const Authorization = ({ children }) => {
-  const { signUp, signIn, user, authLoading } = useContext(AuthContext);
+  const { user, signUp, signIn, signOut, loading } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [formType, setFormType] = useState("Sign In");
   const otherFormType = formType === "Sign In" ? "Sign Up" : "Sign In";
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (formType === "Sign In") signIn({ variables: formData });
-    if (formType === "Sign Up") signUp({ variables: formData });
+    if (formType === "Sign In") await signIn(formData.email, formData.password);
+    if (formType === "Sign Up") await signUp(formData.email, formData.password);
     setFormData({ email: "", password: "" });
     setFormType("Sign In");
   };
 
-  if (authLoading) return <h2>Loading...</h2>;
   if (user) return children;
   return (
     <main>

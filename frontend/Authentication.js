@@ -1,43 +1,48 @@
 import React, { createContext } from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import {
-  USER_QUERY,
-  SIGN_UP_MUTATION,
-  SIGN_IN_MUTATION,
-} from "./graphql-queries";
+import { Auth } from "aws-amplify";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { data, loading, refetch } = useQuery(USER_QUERY, {
-    notifyOnNetworkStatusChange: true,
-  });
-  const { user } = data || {};
+  let user = null;
 
-  const [signUp, { loading: signUpLoading }] = useMutation(SIGN_UP_MUTATION, {
-    onCompleted: (data) => {
-      localStorage.setItem("token", data.signUp.token);
-      refetch();
-    },
-    onError: (error) => {
-      alert(error.graphQLErrors[0].message);
-    },
-  });
+  const signUp = async (email, password) => {
+    try {
+      await Auth.signUp({
+        username: email,
+        password,
+      });
+      const code = prompt("Input your confirmation code");
+      await Auth.confirmSignUp(email, code);
+      user = await Auth.signIn(email, password);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
-  const [signIn, { loading: signInLoading }] = useMutation(SIGN_IN_MUTATION, {
-    onCompleted: (data) => {
-      localStorage.setItem("token", data.signIn.token);
-      refetch();
-    },
-    onError: (error) => {
-      alert(error.graphQLErrors[0].message);
-    },
-  });
+  const signIn = async (email, password) => {
+    try {
+      user = await Auth.signIn(email, password);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   const signOut = () => {
     localStorage.removeItem("token");
-    refetch();
+    getCurrentUser();
   };
+
+  const getCurrentUser = async () => {
+    try {
+      user = await Auth.currentAuthenticatedUser();
+      localStorage.setItem("token", user.username);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  getCurrentUser();
 
   return (
     <AuthContext.Provider
@@ -46,7 +51,6 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         user,
-        authLoading: loading || signUpLoading || signInLoading,
       }}
     >
       {children}
