@@ -1,7 +1,7 @@
-service: sls-react-gql
-# app and org for use with dashboard.serverless.com
-app: sls-react-gql
 org: andyweiss1982
+app: react-gql-cognito
+service: react-gql-cognito
+# app and org for use with dashboard.serverless.com
 provider:
   name: aws
   runtime: nodejs12.x
@@ -19,21 +19,74 @@ provider:
 plugins:
   - serverless-offline
   - serverless-s3-sync
+  - serverless-plugin-include-dependencies
+  - serverless-plugin-common-excludes
+
+package:
+  excludeDevDependencies: false
+  individually: true
+  exclude:
+    - node_modules/**
 
 custom:
-  siteName: andy-sls-react-gql
-  tableName: andy-sls-react-gql-users
+  siteName: andy-react-gql-demo-${self:provider.stage}
+  tableName: ${self:custom.siteName}-table
+  bucketName: ${self:custom.siteName}-bucket
   s3Sync:
-    - bucketName: ${self:custom.siteName}
-      localDir: build
+    - bucketName: ${self:custom.bucketName}
+      localDir: dist
+
+outputs:
+  region: ${self:provider.region}
+  userPool: !Ref CognitoUserPool
+  userPoolClient: !Ref CognitoUserPoolClient
 
 resources:
   Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.siteName}
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:custom.siteName}
+        GenerateSecret: False
+        UserPoolId:
+          Ref: CognitoUserPool
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthScopes:
+          - email
+          - openid
+        CallbackURLs:
+          - http://localhost:1234
+        LogoutURLs:
+          - http://localhost:1234
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        SupportedIdentityProviders:
+          - COGNITO
+    CognitoUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        UserPoolId:
+          Ref: CognitoUserPool
+        Domain: ${self:custom.siteName}-user-pool
     StaticSite:
       Type: AWS::S3::Bucket
       Properties:
         AccessControl: PublicRead
-        BucketName: ${self:custom.siteName}
+        BucketName: ${self:custom.bucketName}
         WebsiteConfiguration:
           IndexDocument: index.html
     StaticSiteS3BucketPolicy:

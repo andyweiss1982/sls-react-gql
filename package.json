@@ -3,14 +3,17 @@
     "concurrently": "^5.2.0",
     "parcel": "^1.12.4",
     "serverless-offline": "^6.4.0",
+    "serverless-plugin-common-excludes": "^3.0.0",
+    "serverless-plugin-include-dependencies": "^4.1.0",
     "serverless-s3-sync": "^1.14.3"
   },
   "scripts": {
-    "start": "concurrently \"parcel frontend/index.html -d build\" \"AWS_PROFILE=personal sls offline\"",
-    "deploy": "rm -rf build && parcel build frontend/index.html -d build && sls deploy"
+    "start": "concurrently \"REGION=`sls output get --name region` USER_POOL=`sls output get --name userPool` USER_POOL_CLIENT=`sls output get --name userPoolClient` parcel frontend/index.html -d dist\" \"AWS_PROFILE=personal sls offline\"",
+    "deploy": "rm -rf dist && parcel build frontend/index.html -d dist && AWS_PROFILE=personal sls deploy"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
+    "@aws-amplify/ui-react": "^0.2.9",
     "@types/react": "^16.8.0",
     "apollo-boost": "^0.4.9",
     "apollo-cache-inmemory": "^1.6.6",
@@ -18,6 +21,7 @@
     "apollo-link-context": "^1.0.20",
     "apollo-link-http": "^1.5.17",
     "apollo-server-lambda": "^2.14.5",
+    "aws-amplify": "^3.0.18",
     "aws-sdk": "^2.698.0",
     "bcryptjs": "^2.4.3",
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
