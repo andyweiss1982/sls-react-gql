@@ -1,10 +1,11 @@
 .cache 
+.webpack
 
 .env
 .env.development
 .env.production
 
-build
+dist
 
 # package directories
 node_modules

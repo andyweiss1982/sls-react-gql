@@ -1,15 +1,43 @@
-const { ApolloServer, AuthenticationError } = require("apollo-server-lambda");
+const {
+  ApolloServer,
+  gql,
+  AuthenticationError,
+} = require("apollo-server-lambda");
 const AWS = require("aws-sdk");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
-const { typeDefs } = require("./typeDefs");
 
 const DB = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.tableName;
 
 const secret = "secret";
 const saltRounds = 10;
+
+const typeDefs = gql`
+  type Task {
+    id: ID!
+    description: String!
+    createdAt: String!
+  }
+  type User {
+    email: String!
+    password: String!
+    tasks: [Task]!
+  }
+  type JWT {
+    token: String!
+  }
+  type Query {
+    user: User
+  }
+  type Mutation {
+    signUp(email: String!, password: String!): JWT
+    signIn(email: String!, password: String!): JWT
+    createTask(description: String!): Task!
+    deleteTask(id: ID!): Task!
+  }
+`;
 
 const resolvers = {
   Query: { user: (_, __, { user }) => user },

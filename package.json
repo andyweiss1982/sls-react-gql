@@ -2,9 +2,8 @@
   "devDependencies": {
     "concurrently": "^5.2.0",
     "parcel": "^1.12.4",
+    "serverless-bundle": "^1.8.0",
     "serverless-offline": "^6.4.0",
-    "serverless-plugin-common-excludes": "^3.0.0",
-    "serverless-plugin-include-dependencies": "^4.1.0",
     "serverless-s3-sync": "^1.14.3"
   },
   "scripts": {

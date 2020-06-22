@@ -17,16 +17,12 @@ provider:
       Resource: "*"
 
 plugins:
+  - serverless-bundle
   - serverless-offline
   - serverless-s3-sync
-  - serverless-plugin-include-dependencies
-  - serverless-plugin-common-excludes
 
 package:
-  excludeDevDependencies: false
   individually: true
-  exclude:
-    - node_modules/**
 
 custom:
   siteName: andy-react-gql-demo-${self:provider.stage}
