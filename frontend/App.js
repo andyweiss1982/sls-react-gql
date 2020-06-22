@@ -7,9 +7,10 @@ import Authorization from "./Authorization";
 import Tasks from "./Tasks";
 
 import Amplify, { Auth } from "aws-amplify";
-// import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
+import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 
 Amplify.configure({
+  aws_project_region: process.env.REGION,
   Auth: {
     region: process.env.REGION,
     userPoolId: process.env.USER_POOL,
@@ -22,15 +23,15 @@ console.log({ Amplify, Auth });
 const App = () => (
   <ApolloProvider client={client}>
     <AuthProvider>
+      <AmplifySignOut />
       <Authorization>
-        {/* <AmplifySignOut /> */}
         <Tasks />
       </Authorization>
     </AuthProvider>
   </ApolloProvider>
 );
 
-// const AuthedApp = withAuthenticator(App);
-const AuthedApp = App;
+const AuthedApp = withAuthenticator(App);
+// const AuthedApp = App;
 
 ReactDOM.render(<AuthedApp />, document.getElementById("root"));
