@@ -5,11 +5,11 @@ service: andy-sls-poc
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
   profile: personal
   environment:
-    tableName: ${self:custom.tableName}
+    TABLE_NAME: ${self:custom.tableName}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -33,9 +33,9 @@ custom:
       localDir: dist
 
 outputs:
-  region: ${self:provider.region}
-  userPool: !Ref CognitoUserPool
-  userPoolClient: !Ref CognitoUserPoolClient
+  REGION: ${self:provider.region}
+  USER_POOL: !Ref CognitoUserPool
+  USER_POOL_CLIENT: !Ref CognitoUserPoolClient
 
 resources:
   Resources:

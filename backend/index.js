@@ -3,7 +3,7 @@ const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 
 const DB = new AWS.DynamoDB.DocumentClient();
-const TableName = process.env.tableName;
+const TableName = process.env.TABLE_NAME;
 
 const typeDefs = gql`
   type Task {
