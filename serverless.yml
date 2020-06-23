@@ -57,27 +57,6 @@ resources:
         GenerateSecret: False
         UserPoolId:
           Ref: CognitoUserPool
-        AllowedOAuthFlowsUserPoolClient: true
-        AllowedOAuthFlows:
-          - implicit
-        AllowedOAuthScopes:
-          - email
-          - openid
-        CallbackURLs:
-          - http://localhost:1234
-        LogoutURLs:
-          - http://localhost:1234
-        ExplicitAuthFlows:
-          - ALLOW_USER_SRP_AUTH
-          - ALLOW_REFRESH_TOKEN_AUTH
-        SupportedIdentityProviders:
-          - COGNITO
-    CognitoUserPoolDomain:
-      Type: AWS::Cognito::UserPoolDomain
-      Properties:
-        UserPoolId:
-          Ref: CognitoUserPool
-        Domain: ${self:custom.siteName}-user-pool
     StaticSite:
       Type: AWS::S3::Bucket
       Properties:
