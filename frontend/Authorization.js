@@ -2,7 +2,9 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "./Authentication";
 
 const Authorization = ({ children }) => {
-  const { user, signUp, signIn, loading } = useContext(AuthContext);
+  const { user, signUp, signIn, loading, errorMessage } = useContext(
+    AuthContext
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formType, setFormType] = useState("Sign In");
@@ -16,12 +18,10 @@ const Authorization = ({ children }) => {
     setPassword("");
     setFormType("Sign In");
   };
-
-  if (loading) return <h2>Loading...</h2>;
   if (user) return children;
   return (
     <main>
-      <h2>{formType}</h2>
+      <h2>{loading ? "Loading..." : formType}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
@@ -29,6 +29,7 @@ const Authorization = ({ children }) => {
             id="email"
             type="email"
             required
+            autoComplete="off"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -44,6 +45,9 @@ const Authorization = ({ children }) => {
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
+        {errorMessage && !email && !password && (
+          <p className="error">{errorMessage}</p>
+        )}
         <div className="buttons">
           <button className="primary" type="submit">
             {formType}

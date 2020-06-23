@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const signUp = async (email, password) => {
     setLoading(true);
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
     } catch (error) {
       setUser(null);
-      alert(error.message);
+      setErrorMessage(error.message);
     }
     setLoading(false);
   };
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
     } catch (error) {
       setUser(null);
-      alert(error.message);
+      setErrorMessage(error.message);
     }
     setLoading(false);
   };
@@ -64,6 +65,7 @@ export const AuthProvider = ({ children }) => {
         signOut,
         user,
         loading,
+        errorMessage,
       }}
     >
       {children}

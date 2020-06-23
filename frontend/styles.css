@@ -22,6 +22,11 @@ form {
   width: 100%;
 }
 
+.error {
+  color: indianred;
+  text-align: center;
+}
+
 form[name="tasks"] {
   display: flex;
 }
