@@ -16,12 +16,11 @@ export const AuthProvider = ({ children }) => {
       await Auth.confirmSignUp(email, code);
       const user = await Auth.signIn(email, password);
       setUser(user);
-      setLoading(false);
     } catch (error) {
       setUser(null);
-      setLoading(false);
       alert(error.message);
     }
+    setLoading(false);
   };
 
   const signIn = async (email, password) => {
@@ -29,12 +28,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const user = await Auth.signIn(email, password);
       setUser(user);
-      setLoading(false);
     } catch (error) {
       setUser(null);
-      setLoading(false);
       alert(error.message);
     }
+    setLoading(false);
   };
 
   const signOut = async () => {
@@ -50,11 +48,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       setUser(user);
-      setLoading(false);
     } catch (error) {
       setUser(null);
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
