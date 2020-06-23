@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "./Authentication";
 
 const Authorization = ({ children }) => {
-  const { user, signUp, signIn, signOut, loading } = useContext(AuthContext);
+  const { user, signUp, signIn } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [formType, setFormType] = useState("Sign In");
   const otherFormType = formType === "Sign In" ? "Sign Up" : "Sign In";
@@ -14,7 +14,6 @@ const Authorization = ({ children }) => {
     setFormData({ email: "", password: "" });
     setFormType("Sign In");
   };
-
   if (user) return children;
   return (
     <main>

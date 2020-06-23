@@ -1,48 +1,50 @@
-import React, { createContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  let user = null;
+  const [user, setUser] = useState(null);
 
   const signUp = async (email, password) => {
     try {
-      await Auth.signUp({
-        username: email,
-        password,
-      });
+      await Auth.signUp({ username: email, password });
       const code = prompt("Input your confirmation code");
       await Auth.confirmSignUp(email, code);
-      user = await Auth.signIn(email, password);
+      await Auth.signIn(email, password);
+      await getCurrentUser();
     } catch (error) {
+      setUser(null);
       alert(error.message);
     }
   };
 
   const signIn = async (email, password) => {
     try {
-      user = await Auth.signIn(email, password);
+      await Auth.signIn(email, password);
+      await getCurrentUser();
     } catch (error) {
+      setUser(null);
       alert(error.message);
     }
   };
 
-  const signOut = () => {
-    localStorage.removeItem("token");
-    getCurrentUser();
+  const signOut = async () => {
+    await Auth.signOut();
+    await getCurrentUser();
   };
 
   const getCurrentUser = async () => {
     try {
-      user = await Auth.currentAuthenticatedUser();
-      localStorage.setItem("token", user.username);
+      setUser(await Auth.currentAuthenticatedUser());
     } catch (error) {
-      console.error(error.message);
+      setUser(null);
     }
   };
 
-  getCurrentUser();
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <AuthContext.Provider
