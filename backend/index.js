@@ -65,25 +65,20 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ event }) => {
     const id = event.headers.Authorization || "";
-    let user;
+    let user = null;
     if (id) {
-      try {
-        let { Item } = await DB.get({
+      let { Item } = await DB.get({
+        TableName,
+        Key: { id },
+      }).promise();
+      if (!Item) {
+        Item = { id, tasks: [] };
+        await DB.put({
           TableName,
-          Key: { id },
+          Item,
         }).promise();
-        if (Item) {
-          user = Item;
-        } else {
-          Item = { id, tasks: [] };
-          await DB.put({
-            TableName,
-            Item,
-          }).promise();
-        }
-      } catch (error) {
-        user = null;
       }
+      user = Item;
     }
     return { user };
   },

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
+import client from "./graphql-client";
 
 export const AuthContext = createContext();
 
@@ -11,8 +12,8 @@ export const AuthProvider = ({ children }) => {
       await Auth.signUp({ username: email, password });
       const code = prompt("Input your confirmation code");
       await Auth.confirmSignUp(email, code);
-      await Auth.signIn(email, password);
-      await getCurrentUser();
+      const user = await Auth.signIn(email, password);
+      setUser(user);
     } catch (error) {
       setUser(null);
       alert(error.message);
@@ -21,8 +22,8 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      await Auth.signIn(email, password);
-      await getCurrentUser();
+      const user = await Auth.signIn(email, password);
+      setUser(user);
     } catch (error) {
       setUser(null);
       alert(error.message);
@@ -31,12 +32,14 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = async () => {
     await Auth.signOut();
-    await getCurrentUser();
+    client.cache.reset();
+    setUser(null);
   };
 
   const getCurrentUser = async () => {
     try {
-      setUser(await Auth.currentAuthenticatedUser());
+      const user = await Auth.currentAuthenticatedUser();
+      setUser(user);
     } catch (error) {
       setUser(null);
     }
