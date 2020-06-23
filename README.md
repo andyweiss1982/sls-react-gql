@@ -17,7 +17,8 @@ aws_secret_access_key=your_secret_access_key
 ## Setup
 
 - `clone` and `cd` and `yarn`
-- Configure the `app`, `org` `service` properties of the `serverless.yml` file.
+- Comment out the `app` and `org` properties of `serverless.yml`
+- Optionally change the `service` property.
 - `sls`
 
 ## To run locally
