@@ -9,7 +9,7 @@ provider:
   region: us-east-1
   profile: personal
   environment:
-    TABLE_NAME: ${self:custom.tableName}
+    tableName: ${self:custom.tableName}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -31,11 +31,20 @@ custom:
   s3Sync:
     - bucketName: ${self:custom.bucketName}
       localDir: dist
-
 outputs:
-  REGION: ${self:provider.region}
-  USER_POOL: !Ref CognitoUserPool
-  USER_POOL_CLIENT: !Ref CognitoUserPoolClient
+  region: ${self:provider.region}
+  userPool: !Ref CognitoUserPool
+  userPoolClient: !Ref CognitoUserPoolClient
+  gatewayUrl:
+    Fn::Join:
+      [
+        "",
+        [
+          "https://",
+          { "Ref": "ApiGatewayRestApi" },
+          ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}",
+        ],
+      ]
 
 resources:
   Resources:

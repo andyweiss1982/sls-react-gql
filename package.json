@@ -7,8 +7,8 @@
     "serverless-s3-sync": "^1.14.3"
   },
   "scripts": {
-    "start": "concurrently \"REGION=`sls output get --name REGION` USER_POOL=`sls output get --name USER_POOL` USER_POOL_CLIENT=`sls output get --name USER_POOL_CLIENT` parcel frontend/index.html -d dist\" \"AWS_PROFILE=personal sls offline\"",
-    "deploy": "rm -rf dist && parcel build frontend/index.html -d dist && AWS_PROFILE=personal sls deploy"
+    "start": "concurrently \"REGION=`sls output get --name region` USER_POOL=`sls output get --name userPool` USER_POOL_CLIENT=`sls output get --name userPoolClient` GATEWAY_URL='http://localhost:3000/dev' parcel frontend/index.html -d dist\" \"AWS_PROFILE=personal sls offline\"",
+    "deploy": "rm -rf dist && REGION=`sls output get --name region` USER_POOL=`sls output get --name userPool` USER_POOL_CLIENT=`sls output get --name userPoolClient` GATEWAY_URL=`sls output get --name gatewayUrl` parcel build frontend/index.html -d dist && AWS_PROFILE=personal sls deploy"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",

@@ -4,7 +4,7 @@ import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { Auth } from "aws-amplify";
 
-const uri = process.env.GQL_ENDPOINT || "http://localhost:3000/dev/graphql";
+const uri = `${process.env.GATEWAY_URL}/graphql`;
 const httpLink = createHttpLink({ uri });
 
 const authLink = setContext(async (_, { headers }) => {
