@@ -6,42 +6,54 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const signUp = async (email, password) => {
+    setLoading(true);
     try {
       await Auth.signUp({ username: email, password });
       const code = prompt("Input your confirmation code");
       await Auth.confirmSignUp(email, code);
       const user = await Auth.signIn(email, password);
       setUser(user);
+      setLoading(false);
     } catch (error) {
       setUser(null);
+      setLoading(false);
       alert(error.message);
     }
   };
 
   const signIn = async (email, password) => {
+    setLoading(true);
     try {
       const user = await Auth.signIn(email, password);
       setUser(user);
+      setLoading(false);
     } catch (error) {
       setUser(null);
+      setLoading(false);
       alert(error.message);
     }
   };
 
   const signOut = async () => {
+    setLoading(true);
     await Auth.signOut();
     client.cache.reset();
     setUser(null);
+    setLoading(false);
   };
 
   const getCurrentUser = async () => {
+    setLoading(true);
     try {
       const user = await Auth.currentAuthenticatedUser();
       setUser(user);
+      setLoading(false);
     } catch (error) {
       setUser(null);
+      setLoading(false);
     }
   };
 
@@ -56,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         user,
+        loading,
       }}
     >
       {children}

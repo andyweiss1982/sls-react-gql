@@ -69,8 +69,8 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ event }) => {
     const id = event.headers.Authorization || "";
-    let user = null;
-    if (id) {
+    let user;
+    try {
       let { Item } = await DB.get({
         TableName,
         Key: { id },
@@ -83,8 +83,9 @@ const server = new ApolloServer({
         }).promise();
       }
       user = Item;
+    } catch (error) {
+      throw new AuthenticationError();
     }
-    if (!user) throw new AuthenticationError();
     return { user };
   },
   playground: {
