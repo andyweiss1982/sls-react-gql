@@ -1,11 +1,12 @@
-service: sls-react-gql
+service: andy-sls-poc
 # app and org for use with dashboard.serverless.com
-app: sls-react-gql
+app: andy-sls-poc
 org: andyweiss1982
+
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
   profile: personal
   environment:
@@ -17,23 +18,61 @@ provider:
       Resource: "*"
 
 plugins:
+  - serverless-bundle
   - serverless-offline
   - serverless-s3-sync
 
+package:
+  individually: true
+
 custom:
-  siteName: andy-sls-react-gql
-  tableName: andy-sls-react-gql-users
+  siteName: ${self:service}-${self:provider.stage}
+  tableName: ${self:custom.siteName}-table
+  bucketName: ${self:custom.siteName}-bucket
   s3Sync:
-    - bucketName: ${self:custom.siteName}
-      localDir: build
+    - bucketName: ${self:custom.bucketName}
+      localDir: dist
+
+outputs:
+  region: ${self:provider.region}
+  userPool: !Ref CognitoUserPool
+  userPoolClient: !Ref CognitoUserPoolClient
+  gatewayUrl:
+    Fn::Join:
+      [
+        "",
+        [
+          "https://",
+          { "Ref": "ApiGatewayRestApi" },
+          ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}",
+        ],
+      ]
 
 resources:
   Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.siteName}
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:custom.siteName}
+        GenerateSecret: False
+        UserPoolId:
+          Ref: CognitoUserPool
     StaticSite:
       Type: AWS::S3::Bucket
       Properties:
         AccessControl: PublicRead
-        BucketName: ${self:custom.siteName}
+        BucketName: ${self:custom.bucketName}
         WebsiteConfiguration:
           IndexDocument: index.html
     StaticSiteS3BucketPolicy:
@@ -55,10 +94,10 @@ resources:
       Properties:
         TableName: ${self:custom.tableName}
         AttributeDefinitions:
-          - AttributeName: email
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: email
+          - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 

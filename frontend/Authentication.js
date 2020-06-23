@@ -1,43 +1,65 @@
-import React, { createContext } from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import {
-  USER_QUERY,
-  SIGN_UP_MUTATION,
-  SIGN_IN_MUTATION,
-} from "./graphql-queries";
+import React, { createContext, useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
+import client from "./graphql-client";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { data, loading, refetch } = useQuery(USER_QUERY, {
-    notifyOnNetworkStatusChange: true,
-  });
-  const { user } = data || {};
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [signUp, { loading: signUpLoading }] = useMutation(SIGN_UP_MUTATION, {
-    onCompleted: (data) => {
-      localStorage.setItem("token", data.signUp.token);
-      refetch();
-    },
-    onError: (error) => {
-      alert(error.graphQLErrors[0].message);
-    },
-  });
-
-  const [signIn, { loading: signInLoading }] = useMutation(SIGN_IN_MUTATION, {
-    onCompleted: (data) => {
-      localStorage.setItem("token", data.signIn.token);
-      refetch();
-    },
-    onError: (error) => {
-      alert(error.graphQLErrors[0].message);
-    },
-  });
-
-  const signOut = () => {
-    localStorage.removeItem("token");
-    refetch();
+  const signUp = async (email, password) => {
+    setLoading(true);
+    try {
+      await Auth.signUp({ username: email, password });
+      const code = prompt("Input your confirmation code");
+      await Auth.confirmSignUp(email, code);
+      const user = await Auth.signIn(email, password);
+      setUser(user);
+      setLoading(false);
+    } catch (error) {
+      setUser(null);
+      setLoading(false);
+      alert(error.message);
+    }
   };
+
+  const signIn = async (email, password) => {
+    setLoading(true);
+    try {
+      const user = await Auth.signIn(email, password);
+      setUser(user);
+      setLoading(false);
+    } catch (error) {
+      setUser(null);
+      setLoading(false);
+      alert(error.message);
+    }
+  };
+
+  const signOut = async () => {
+    setLoading(true);
+    await Auth.signOut();
+    client.cache.reset();
+    setUser(null);
+    setLoading(false);
+  };
+
+  const getCurrentUser = async () => {
+    setLoading(true);
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      setUser(user);
+      setLoading(false);
+    } catch (error) {
+      setUser(null);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -46,7 +68,7 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         user,
-        authLoading: loading || signUpLoading || signInLoading,
+        loading,
       }}
     >
       {children}
