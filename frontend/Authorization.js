@@ -3,15 +3,17 @@ import { AuthContext } from "./Authentication";
 
 const Authorization = ({ children }) => {
   const { user, signUp, signIn, loading } = useContext(AuthContext);
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [formType, setFormType] = useState("Sign In");
   const otherFormType = formType === "Sign In" ? "Sign Up" : "Sign In";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (formType === "Sign In") await signIn(formData.email, formData.password);
-    if (formType === "Sign Up") await signUp(formData.email, formData.password);
-    setFormData({ email: "", password: "" });
+    if (formType === "Sign In") await signIn(email, password);
+    if (formType === "Sign Up") await signUp(email, password);
+    setEmail("");
+    setPassword("");
     setFormType("Sign In");
   };
 
@@ -24,24 +26,22 @@ const Authorization = ({ children }) => {
         <div>
           <label htmlFor="email">Email</label>
           <input
+            id="email"
             type="email"
             required
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
           />
         </div>
         <div>
           <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
             required
             minLength="8"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
         <div className="buttons">
