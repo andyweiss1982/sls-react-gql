@@ -17,19 +17,15 @@ aws_secret_access_key=your_secret_access_key
 ## Setup
 
 - `clone` and `cd` and `yarn`
-- Configure the `app`, `org` `custom.siteName` and `custom.tableName` properties of the `serverless.yml` file.
+- Configure the `app`, `org` `service` properties of the `serverless.yml` file.
 - `sls`
-
-## To deploy
-
-- `yarn deploy`
-- Note the endpoint of your graphql function in the deploy output.
-- Create a `.env.production` file at the root of the project that matches the structure of `.env.production.sample`
-- Update it to use the url of your graphql endpoint.
-- `yarn deploy` again (The url is stable between deploys, so from now on you can just do this once.)
-
-The app should deploy to `http://<custom.siteName>.s3-website-us-east-1.amazonaws.com/`
 
 ## To run locally
 
-- `yarn start`
+- `yarn dev`
+
+## To deploy
+
+- `yarn deploy:dev|qa|prod`
+
+The app should deploy to `http://<service-name>-<stage>-bucket.s3-website-us-east-1.amazonaws.com/`
