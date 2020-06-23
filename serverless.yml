@@ -11,7 +11,7 @@ provider:
   profile: personal
   environment:
     tableName: ${self:custom.tableName}
-    stage: ${self.provider.stage}
+    stage: ${self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
