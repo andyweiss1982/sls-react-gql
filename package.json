@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
-    "@aws-amplify/ui-react": "^0.2.9",
     "@types/react": "^16.8.0",
     "apollo-boost": "^0.4.9",
     "apollo-cache-inmemory": "^1.6.6",
@@ -24,9 +23,7 @@
     "apollo-server-lambda": "^2.14.5",
     "aws-amplify": "^3.0.18",
     "aws-sdk": "^2.698.0",
-    "bcryptjs": "^2.4.3",
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
-    "jsonwebtoken": "^8.5.1",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "uuid": "^8.1.0"
