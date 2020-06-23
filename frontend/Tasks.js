@@ -41,7 +41,7 @@ const Tasks = () => {
           autoComplete="off"
           placeholder={`What's on the agenda, ${user.attributes.email}?`}
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(event) => setDescription(event.target.value)}
         />
         <button type="button" onClick={signOut}>
           Sign Out
