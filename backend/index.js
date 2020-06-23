@@ -89,7 +89,7 @@ const server = new ApolloServer({
     return { user };
   },
   playground: {
-    endpoint: "/dev/graphql",
+    endpoint: `/${process.env.stage}/graphql`,
   },
 });
 
