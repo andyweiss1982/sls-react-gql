@@ -1,4 +1,8 @@
-const { ApolloServer, gql } = require("apollo-server-lambda");
+const {
+  ApolloServer,
+  gql,
+  AuthenticationError,
+} = require("apollo-server-lambda");
 const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 
@@ -80,6 +84,7 @@ const server = new ApolloServer({
       }
       user = Item;
     }
+    if (!user) throw new AuthenticationError();
     return { user };
   },
   playground: {
