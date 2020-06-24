@@ -27,9 +27,10 @@ package:
   individually: true
 
 custom:
+  version: "1"
   siteName: ${self:service}-${self:provider.stage}
-  tableName: ${self:custom.siteName}-table
-  bucketName: ${self:custom.siteName}-bucket
+  tableName: ${self:custom.siteName}-table-${self:custom.version}
+  bucketName: ${self:custom.siteName}-bucket-${self:custom.version}
   s3Sync:
     - bucketName: ${self:custom.bucketName}
       localDir: dist
@@ -95,11 +96,15 @@ resources:
       Properties:
         TableName: ${self:custom.tableName}
         AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
           - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
 
 functions:

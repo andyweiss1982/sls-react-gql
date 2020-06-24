@@ -12,12 +12,9 @@ const TableName = process.env.tableName;
 const typeDefs = gql`
   type Task {
     id: ID!
+    userId: String!
     description: String!
     createdAt: String!
-  }
-  type User {
-    id: ID!
-    tasks: [Task]!
   }
   type Query {
     tasks: [Task]!
@@ -30,36 +27,33 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    tasks: (_, __, { user }) => {
-      return user.tasks.sort((a, b) => b.createdAt - a.createdAt);
+    tasks: async (_, __, { userId }) => {
+      const { Items } = await DB.query({
+        TableName,
+        KeyConditionExpression: "userId = :userId",
+        ExpressionAttributeValues: { ":userId": userId },
+      }).promise();
+      return Items.sort((a, b) => b.createdAt - a.createdAt);
     },
   },
   Mutation: {
-    createTask: async (_, { description }, { user }) => {
-      const task = {
+    createTask: async (_, { description }, { userId }) => {
+      const Item = {
+        userId,
         id: uuidv4(),
         description,
         createdAt: +Date.now(),
       };
-      await DB.put({
-        TableName,
-        Item: {
-          ...user,
-          tasks: [...user.tasks, task],
-        },
-      }).promise();
-      return task;
+      await DB.put({ TableName, Item }).promise();
+      return Item;
     },
-    deleteTask: async (_, { id }, { user }) => {
-      const task = user.tasks.find((task) => task.id === id);
-      await DB.put({
+    deleteTask: async (_, { id }, { userId }) => {
+      const { Item } = await DB.get({
         TableName,
-        Item: {
-          ...user,
-          tasks: user.tasks.filter((task) => task.id !== id),
-        },
+        Key: { userId, id },
       }).promise();
-      return task;
+      await DB.delete({ TableName, Key: { userId, id } }).promise();
+      return Item;
     },
   },
 };
@@ -68,25 +62,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ event }) => {
-    const id = event.headers.Authorization || "";
-    let user;
-    try {
-      let { Item } = await DB.get({
-        TableName,
-        Key: { id },
-      }).promise();
-      if (!Item) {
-        Item = { id, tasks: [] };
-        await DB.put({
-          TableName,
-          Item,
-        }).promise();
-      }
-      user = Item;
-    } catch (error) {
-      throw new AuthenticationError();
-    }
-    return { user };
+    const userId = event.headers.Authorization || "";
+    if (!userId) throw new AuthenticationError();
+    return { userId };
   },
   playground: {
     endpoint: `/${process.env.stage}/graphql`,
