@@ -1,7 +1,7 @@
-service: andy-sls-poc
-# app and org for use with dashboard.serverless.com
-app: andy-sls-poc
 org: andyweiss1982
+app: sls-poc
+service: sls-poc
+# app and org for use with dashboard.serverless.com
 
 provider:
   name: aws
@@ -28,9 +28,9 @@ package:
 
 custom:
   version: "1"
-  siteName: ${self:service}-${self:provider.stage}
-  tableName: ${self:custom.siteName}-table-${self:custom.version}
-  bucketName: ${self:custom.siteName}-bucket-${self:custom.version}
+  siteName: ${self:service}-${self:provider.stage}-${self:custom.version}
+  tableName: ${self:custom.siteName}-table
+  bucketName: ${self:custom.siteName}-bucket
   s3Sync:
     - bucketName: ${self:custom.bucketName}
       localDir: dist
