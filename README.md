@@ -21,10 +21,6 @@ aws_secret_access_key=your_secret_access_key
 - Optionally change the `service` property.
 - `sls`
 
-## To run locally
-
-- `yarn dev`
-
 ## To deploy
 
 - `yarn deploy:dev|qa|prod`
@@ -32,3 +28,9 @@ aws_secret_access_key=your_secret_access_key
 The very first time you deploy a stage, you actually need to run this command twice. The first time creates the resources, the second one builds the FE with the right environment variables after the resources exist.
 
 The app should deploy to `http://<service-name>-<stage>-bucket.s3-website-us-east-1.amazonaws.com/`
+
+## To run locally
+
+- `yarn dev`
+
+You need to have deployed `dev` at least once for this to work.
