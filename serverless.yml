@@ -51,6 +51,7 @@ outputs:
           ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}",
         ],
       ]
+  siteUrl: https://${self:custom.siteName}.s3-website-us-east-1.amazonaws.com/
 
 resources:
   Resources:
