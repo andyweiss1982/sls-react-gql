@@ -11,7 +11,7 @@ const authLink = setContext(async (_, { headers }) => {
   let token;
   try {
     const user = await Auth.currentAuthenticatedUser();
-    token = user.username;
+    token = user.signInUserSession.accessToken.jwtToken;
   } catch (error) {
     token = null;
   }

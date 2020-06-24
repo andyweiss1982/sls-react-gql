@@ -7,6 +7,7 @@ const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 
 const DB = new AWS.DynamoDB.DocumentClient();
+const identityProvider = new AWS.CognitoIdentityServiceProvider();
 const TableName = process.env.tableName;
 
 const typeDefs = gql`
@@ -62,9 +63,15 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ event }) => {
-    const userId = event.headers.Authorization || "";
-    if (!userId) throw new AuthenticationError();
-    return { userId };
+    const AccessToken = event.headers.Authorization || "";
+    try {
+      const { Username: userId } = await identityProvider
+        .getUser({ AccessToken })
+        .promise();
+      return { userId };
+    } catch (error) {
+      throw new AuthenticationError();
+    }
   },
   playground: {
     endpoint: `/${process.env.stage}/graphql`,
