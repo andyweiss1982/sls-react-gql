@@ -29,4 +29,6 @@ aws_secret_access_key=your_secret_access_key
 
 - `yarn deploy:dev|qa|prod`
 
+The very first time you deploy a stage, you actually need to run this command twice. The first time creates the resources, the second one builds the FE with the right environment variables after the resources exist.
+
 The app should deploy to `http://<service-name>-<stage>-bucket.s3-website-us-east-1.amazonaws.com/`
