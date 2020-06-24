@@ -1,6 +1,6 @@
 org: andyweiss1982
 app: sls-poc
-service: sls-poc
+service: serverless-proof-of-concept
 # app and org for use with dashboard.serverless.com
 
 provider:
@@ -15,7 +15,10 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:*
+        - dynamodb:Get*
+        - dynamodb:Query
+        - dynamodb:Delete*
+        - dynamodb:PutItem
       Resource: "*"
 
 plugins:

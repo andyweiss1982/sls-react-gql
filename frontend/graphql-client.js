@@ -13,12 +13,12 @@ const authLink = setContext(async (_, { headers }) => {
     const user = await Auth.currentAuthenticatedUser();
     token = user.signInUserSession.accessToken.jwtToken;
   } catch (error) {
-    token = null;
+    token = "";
   }
   return {
     headers: {
       ...headers,
-      Authorization: token || "",
+      Authorization: token,
     },
   };
 });
