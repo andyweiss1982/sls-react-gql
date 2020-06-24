@@ -55,7 +55,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
-  useEffect(getCurrentUser, []);
+  useEffect(() => {
+    getCurrentUser;
+  }, []);
 
   return (
     <AuthContext.Provider
