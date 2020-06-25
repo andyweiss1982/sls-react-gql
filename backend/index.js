@@ -1,6 +1,6 @@
 const {
-  ApolloServer,
   gql,
+  ApolloServer,
   AuthenticationError,
 } = require("apollo-server-lambda");
 const AWS = require("aws-sdk");
@@ -8,12 +8,12 @@ const { v4: uuidv4 } = require("uuid");
 
 const DB = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.tableName;
-const identityProvider = new AWS.CognitoIdentityServiceProvider();
+const IdentityProvider = new AWS.CognitoIdentityServiceProvider();
 
 const typeDefs = gql`
   type Task {
     taskId: ID!
-    userId: String!
+    userId: ID!
     description: String!
   }
   type Query {
@@ -32,7 +32,7 @@ const resolvers = {
         TableName,
         KeyConditionExpression: "userId = :userId",
         ExpressionAttributeValues: { ":userId": userId },
-        ScanIndexForward: false,
+        ScanIndexForward: false, // newest items first
       }).promise();
       return Items;
     },
@@ -64,10 +64,10 @@ const server = new ApolloServer({
   context: async ({ event }) => {
     const AccessToken = event.headers.Authorization || "";
     try {
-      const { Username: userId } = await identityProvider
-        .getUser({ AccessToken })
-        .promise();
-      return { userId };
+      const { Username } = await IdentityProvider.getUser({
+        AccessToken,
+      }).promise();
+      return { userId: Username };
     } catch (error) {
       throw new AuthenticationError();
     }
