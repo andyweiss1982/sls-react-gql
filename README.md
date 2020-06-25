@@ -5,7 +5,6 @@
 ## Pre Setup
 
 - `npm i -g serverless`
-- `sls login`
 - set up a `personal` profile in `~/.aws/credentials`
 
 ```
