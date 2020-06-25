@@ -1,6 +1,6 @@
 # Serverless React Graphql
 
-#### This README has not yet been tested by a new user, if you try following these steps and run into trouble please let me know so I can update
+#### This README has not yet been tested by a new user. Tf you try following these steps and run into trouble please let me know so I can update.
 
 ## Pre Setup
 
