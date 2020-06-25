@@ -12,17 +12,16 @@ const identityProvider = new AWS.CognitoIdentityServiceProvider();
 
 const typeDefs = gql`
   type Task {
-    id: ID!
+    taskId: ID!
     userId: String!
     description: String!
-    createdAt: String!
   }
   type Query {
     tasks: [Task]!
   }
   type Mutation {
     createTask(description: String!): Task!
-    deleteTask(id: ID!): Task!
+    deleteTask(taskId: ID!): Task!
   }
 `;
 
@@ -33,27 +32,27 @@ const resolvers = {
         TableName,
         KeyConditionExpression: "userId = :userId",
         ExpressionAttributeValues: { ":userId": userId },
+        ScanIndexForward: false,
       }).promise();
-      return Items.sort((a, b) => b.createdAt - a.createdAt);
+      return Items;
     },
   },
   Mutation: {
     createTask: async (_, { description }, { userId }) => {
       const Item = {
         userId,
-        id: uuidv4(),
+        taskId: Date.now() + uuidv4(), // taskId is sort key, this allows us to sort chronologically
         description,
-        createdAt: +Date.now(),
       };
       await DB.put({ TableName, Item }).promise();
       return Item;
     },
-    deleteTask: async (_, { id }, { userId }) => {
+    deleteTask: async (_, { taskId }, { userId }) => {
       const { Item } = await DB.get({
         TableName,
-        Key: { userId, id },
+        Key: { userId, taskId },
       }).promise();
-      await DB.delete({ TableName, Key: { userId, id } }).promise();
+      await DB.delete({ TableName, Key: { userId, taskId } }).promise();
       return Item;
     },
   },

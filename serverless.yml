@@ -1,3 +1,5 @@
+org: andyweiss1982
+app: sls-poc
 service: serverless-proof-of-concept
 
 provider:
@@ -12,11 +14,12 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:Get*
+        - dynamodb:GetItem
         - dynamodb:Query
-        - dynamodb:Delete*
+        - dynamodb:DeleteItem
         - dynamodb:PutItem
-      Resource: "*"
+      Resource:
+        - Fn::GetAtt: [DynamoTable, Arn]
 
 plugins:
   - serverless-bundle
@@ -98,12 +101,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: id
+          - AttributeName: taskId
             AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
-          - AttributeName: id
+          - AttributeName: taskId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
 

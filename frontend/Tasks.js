@@ -23,10 +23,10 @@ const Tasks = () => {
     setDescription("");
   };
 
-  const handleDelete = (task) => {
+  const handleDelete = ({ taskId }) => {
     if (confirm("Are you sure?")) {
       deleteTask({
-        variables: { id: task.id },
+        variables: { taskId },
         refetchQueries: [{ query: TASKS_QUERY }],
       });
     }
@@ -49,7 +49,7 @@ const Tasks = () => {
       </form>
       <ul>
         {(tasksData?.tasks || []).map((task) => (
-          <li key={task.id}>
+          <li key={task.taskId}>
             {task.description}
             <button className="danger" onClick={() => handleDelete(task)}>
               Delete

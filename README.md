@@ -1,11 +1,12 @@
 # Serverless React Graphql
 
-## This README could use some love, if you try following these steps and run into trouble please let me know so I can update
+#### This README has not yet been tested by a new user, if you try following these steps and run into trouble please let me know so I can update
 
 ## Pre Setup
 
 - `npm i -g serverless`
 - set up a `personal` profile in `~/.aws/credentials`
+- `sls login`
 
 ```
 [personal]
@@ -16,7 +17,8 @@ aws_secret_access_key=your_secret_access_key
 ## Setup
 
 - `clone` and `cd` and `yarn`
-- Change the `service` property in `serverless.yml` to something unique.
+- Change the `service` property in `serverless.yml` to something unique and delete the `app` and `org` properties.
+- `sls` to add in your own `app` and `org`
 
 ## To deploy
 
