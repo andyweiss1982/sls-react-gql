@@ -4,6 +4,12 @@ import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { Auth } from "aws-amplify";
 
+Auth.configure({
+  region: process.env.REGION,
+  userPoolId: process.env.USER_POOL,
+  userPoolWebClientId: process.env.USER_POOL_CLIENT,
+});
+
 const uri = `${process.env.GATEWAY_URL}/graphql`;
 const httpLink = createHttpLink({ uri });
 
