@@ -1,7 +1,4 @@
-org: andyweiss1982
-app: sls-poc
 service: serverless-proof-of-concept
-# app and org for use with dashboard.serverless.com
 
 provider:
   name: aws
