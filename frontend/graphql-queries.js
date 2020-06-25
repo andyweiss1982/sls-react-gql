@@ -5,7 +5,6 @@ export const TASKS_QUERY = gql`
     tasks {
       taskId
       description
-      createdAt
     }
   }
 `;
@@ -15,7 +14,6 @@ export const CREATE_TASK_MUTATION = gql`
     createTask(description: $description) {
       taskId
       description
-      createdAt
     }
   }
 `;
@@ -23,9 +21,8 @@ export const CREATE_TASK_MUTATION = gql`
 export const DELETE_TASK_MUTATION = gql`
   mutation DeleteTask($taskId: ID!) {
     deleteTask(taskId: $taskId) {
-      id
+      taskId
       description
-      createdAt
     }
   }
 `;
