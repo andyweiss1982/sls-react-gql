@@ -7,8 +7,8 @@ const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 
 const DB = new AWS.DynamoDB.DocumentClient();
-const identityProvider = new AWS.CognitoIdentityServiceProvider();
 const TableName = process.env.tableName;
+const identityProvider = new AWS.CognitoIdentityServiceProvider();
 
 const typeDefs = gql`
   type Task {
