@@ -10,8 +10,8 @@
 
 ```
 [personal]
-aws_access_key_id=your_aws_access_key
-aws_secret_access_key=your_secret_access_key
+aws_access_key_id=your_personal_non_work_aws_access_key
+aws_secret_access_key=your_personal_non_work_secret_access_key
 ```
 
 ## Setup
