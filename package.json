@@ -22,7 +22,7 @@
     "apollo-link-http": "^1.5.17",
     "apollo-server-lambda": "^2.14.5",
     "aws-amplify": "^3.0.18",
-    "aws-sdk": "^2.698.0",
+    "aws-sdk": "^2.814.0",
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
